@@ -1,6 +1,11 @@
-from typing import List, TypeVar, Comparable
+from typing import List, TypeVar, Comparable as TypeComparable, Protocol
 
-def patience_sort(arr: List[Comparable]) -> List[Comparable]:
+T = TypeVar('T')
+
+class Comparable(Protocol):
+    def __lt__(self: T, other: T) -> bool: ...
+
+def patience_sort(arr: List[T]) -> List[T]:
     """
     Implement the Patience Sorting algorithm.
     
@@ -8,10 +13,10 @@ def patience_sort(arr: List[Comparable]) -> List[Comparable]:
     playing a game of Patience (Solitaire), creating piles and then merging them.
     
     Args:
-        arr (List[Comparable]): The input list to be sorted
+        arr (List[T]): The input list to be sorted
     
     Returns:
-        List[Comparable]: A new sorted list
+        List[T]: A new sorted list
     """
     # If the list is empty or has only one element, return it as is
     if len(arr) <= 1:
