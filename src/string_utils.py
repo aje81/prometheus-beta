@@ -1,3 +1,5 @@
+import re
+
 def reverse_words(input_string: str) -> str:
     """
     Reverse the order of words in a given string while preserving word integrity.
@@ -20,8 +22,8 @@ def reverse_words(input_string: str) -> str:
     # Remove leading and trailing whitespace
     input_string = input_string.strip()
     
-    # Split the string by one or more whitespace characters
-    words = input_string.split()
+    # Extract words (only alphabetic characters)
+    words = re.findall(r'\b[A-Za-z]+\b', input_string)
     
     # Reverse the list of words
     reversed_words = words[::-1]
