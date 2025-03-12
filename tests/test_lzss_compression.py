@@ -63,6 +63,10 @@ class TestLZSSCompressor:
             for mode in test_modes:
                 test_data = generate_random_data(length, mode)
                 
+                # Convert text to bytes to ensure consistency
+                if isinstance(test_data, str):
+                    test_data = test_data.encode('utf-8')
+                
                 compressed = compressor.compress(test_data)
                 decompressed = compressor.decompress(compressed)
                 
