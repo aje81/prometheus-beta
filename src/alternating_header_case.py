@@ -25,13 +25,16 @@ def convert_to_alternating_header_case(input_string):
     if not input_string:
         return ""
     
-    # Convert to alternating case
-    result = []
-    for i, char in enumerate(input_string):
-        # Uppercase for even indices, lowercase for odd indices
-        if i % 2 == 0:
-            result.append(char.upper())
-        else:
-            result.append(char.lower())
+    # Convert to alternating case preserving word boundaries
+    words = input_string.split()
     
-    return ''.join(result)
+    # Convert each word with alternating case
+    result_words = []
+    for word in words:
+        # Convert the word to alternating case
+        word_chars = list(word)
+        for i in range(len(word_chars)):
+            word_chars[i] = word_chars[i].upper() if i % 2 == 0 else word_chars[i].lower()
+        result_words.append(''.join(word_chars))
+    
+    return ' '.join(result_words)
