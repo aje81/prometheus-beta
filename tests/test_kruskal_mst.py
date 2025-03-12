@@ -39,7 +39,7 @@ def test_kruskal_mst_basic():
     mst = kruskal_mst(graph)
     
     # Verify MST properties
-    assert len(mst) == 6  # For a graph with 9 vertices, MST has 8 vertices - 1 edges
+    assert len(mst) == 8  # Number of vertices - 1
     
     # Calculate total MST weight
     total_weight = sum(weight for weight, _, _ in mst)
@@ -80,7 +80,6 @@ def test_kruskal_mst_cycle_prevention():
     # Only two edges should be in MST
     assert len(mst) == 2
     
-    # Verify the edges are the minimal ones
-    assert sorted((1, 0, 1)) in sorted(mst)
-    assert sorted((2, 1, 2)) in sorted(mst)
-    assert sorted((3, 2, 0)) not in sorted(mst)
+    # Verify the edges are the minimal ones by presence
+    assert any((1, 0, 1) == edge for edge in mst)
+    assert any((2, 1, 2) == edge for edge in mst)
