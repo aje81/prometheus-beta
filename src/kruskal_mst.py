@@ -64,7 +64,7 @@ def kruskal_mst(graph):
         raise ValueError("Graph cannot be empty")
 
     # Sort edges by weight
-    graph.sort()
+    graph = sorted(graph, key=lambda x: x[0])
 
     # Get number of vertices
     vertices = max(max(u, v) for _, u, v in graph) + 1
