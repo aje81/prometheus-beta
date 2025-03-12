@@ -22,8 +22,8 @@ def reverse_words(input_string: str) -> str:
     # Remove leading and trailing whitespace
     input_string = input_string.strip()
     
-    # Extract words (only alphabetic characters)
-    words = re.findall(r'\b[A-Za-z]+\b', input_string)
+    # Extract words (only alphabetic characters from the beginning and end of tokens)
+    words = re.findall(r'[A-Za-z]+', input_string)
     
     # Reverse the list of words
     reversed_words = words[::-1]
