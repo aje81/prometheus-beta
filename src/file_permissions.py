@@ -1,4 +1,5 @@
 import os
+import stat
 
 def is_file_read_only(file_path: str) -> bool:
     """
@@ -22,5 +23,8 @@ def is_file_read_only(file_path: str) -> bool:
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"File not found: {file_path}")
     
-    # Use os.access to check write permissions
-    return not os.access(file_path, os.W_OK)
+    # Get file mode
+    file_mode = os.stat(file_path).st_mode
+    
+    # Check if user/group/others have no write permissions
+    return not bool(file_mode & (stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH))
