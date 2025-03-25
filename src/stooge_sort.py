@@ -9,7 +9,7 @@ def stooge_sort(arr):
         arr (list): The input list to be sorted in-place.
     
     Returns:
-        list: The sorted list.
+        list: The sorted list (same object as input).
     
     Raises:
         TypeError: If the input is not a list.
@@ -44,4 +44,5 @@ def stooge_sort(arr):
         return arr
     
     # Call the recursive helper function
-    return _stooge_sort(arr, 0, len(arr) - 1)
+    _stooge_sort(arr, 0, len(arr) - 1)
+    return arr
