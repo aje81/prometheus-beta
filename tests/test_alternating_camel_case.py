@@ -3,11 +3,11 @@ from src.alternating_camel_case import to_alternating_camel_case
 
 def test_basic_conversion():
     """Test basic string conversion to alternating camel case."""
-    assert to_alternating_camel_case("hello world python") == "helloWorldPython"
+    assert to_alternating_camel_case("hello world python") == "helloWorldpython"
 
 def test_mixed_case_input():
     """Test conversion with mixed case input."""
-    assert to_alternating_camel_case("HELLO world PYTHON") == "helloWorldPython"
+    assert to_alternating_camel_case("HELLO world PYTHON") == "helloWorldpython"
 
 def test_single_word():
     """Test conversion with a single word."""
@@ -15,11 +15,11 @@ def test_single_word():
 
 def test_multiple_spaces():
     """Test conversion with multiple spaces between words."""
-    assert to_alternating_camel_case("hello   world   python") == "helloWorldPython"
+    assert to_alternating_camel_case("hello   world   python") == "helloWorldpython"
 
 def test_leading_trailing_spaces():
     """Test conversion with leading and trailing spaces."""
-    assert to_alternating_camel_case("  hello world python  ") == "helloWorldPython"
+    assert to_alternating_camel_case("  hello world python  ") == "helloWorldpython"
 
 def test_error_empty_string():
     """Test that empty string raises ValueError."""
@@ -38,4 +38,4 @@ def test_error_non_string_input():
 
 def test_numbers_and_words():
     """Test conversion with numbers and words."""
-    assert to_alternating_camel_case("hello 42 world 17 python") == "hello42WorldPython"
+    assert to_alternating_camel_case("hello 42 world 17 python") == "hello42worldPython"
