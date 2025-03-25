@@ -3,7 +3,7 @@ def to_alternating_camel_case(input_string: str) -> str:
     Convert a string to alternating camel case.
     
     Alternating camel case means the first letter is lowercase, 
-    and subsequent words start with alternating case (lower/upper).
+    and subsequent words alternate between lowercase and uppercase.
     
     Args:
         input_string (str): The input string to convert
@@ -17,9 +17,9 @@ def to_alternating_camel_case(input_string: str) -> str:
     
     Examples:
         >>> to_alternating_camel_case("hello world python")
-        'helloWorldPython'
+        'helloWorldpython'
         >>> to_alternating_camel_case("HELLO WORLD PYTHON")
-        'helloWorldPython'
+        'helloWorldpython'
     """
     # Check input type
     if not isinstance(input_string, str):
@@ -43,13 +43,10 @@ def to_alternating_camel_case(input_string: str) -> str:
     for i, word in enumerate(words[1:], 1):
         # Alternate between lower and upper case
         if i % 2 == 1:
-            # Capitalize words, but preserve numeric or symbol tokens
-            if any(c.isalpha() for c in word):
-                result_words.append(word.capitalize())
-            else:
-                result_words.append(word)
+            # Capitalize the first alphabetic letter if exists
+            result_words.append(word.capitalize())
         else:
-            # Ensure lowercase for even-indexed words with alphabetic chars
+            # Lowercase for even-indexed words
             result_words.append(word.lower())
     
     # Join words and return
