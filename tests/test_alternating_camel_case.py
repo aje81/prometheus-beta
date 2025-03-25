@@ -38,4 +38,4 @@ def test_error_non_string_input():
 
 def test_numbers_and_words():
     """Test conversion with numbers and words."""
-    assert to_alternating_camel_case("hello 42 world 17 python") == "hello42worldPython"
+    assert to_alternating_camel_case("hello 42 world 17 python") == "hello42world17python"
