@@ -26,9 +26,18 @@ def compress_file(input_path, output_path=None):
     if os.path.isdir(input_path):
         raise IsADirectoryError(f"Input path must be a file, not a directory: {input_path}")
 
+    # Check read permissions
+    if not os.access(input_path, os.R_OK):
+        raise PermissionError(f"No read permission for file: {input_path}")
+
     # If no output path is specified, create one by appending .gz
     if output_path is None:
         output_path = input_path + '.gz'
+
+    # Check write permissions for output path
+    output_dir = os.path.dirname(output_path) or '.'
+    if not os.access(output_dir, os.W_OK):
+        raise PermissionError(f"No write permission for directory: {output_dir}")
 
     # Compress the file
     try:
