@@ -1,7 +1,7 @@
 """
 LZJB Compression Algorithm Implementation
 
-This module provides a simplified implementation of the LZJB compression algorithm.
+A simplified implementation of LZJB compression.
 """
 
 def compress(data):
@@ -30,19 +30,20 @@ def compress(data):
     current_pos = 0
     
     while current_pos < input_length:
-        # Look for longest repeated sequence
+        # Define search window
+        search_start = max(0, current_pos - 1024)
+        search_end = current_pos
+        
+        # Initialize tracking variables
         best_length = 0
         best_offset = 0
         
-        # Search window: last 1024 bytes
-        search_start = max(0, current_pos - 1024)
-        
-        for j in range(search_start, current_pos):
-            # Try to find the longest matching sequence
+        # Find longest matching sequence
+        for j in range(search_start, search_end):
             match_length = 0
             while (current_pos + match_length < input_length and
-                   data[j + match_length] == data[current_pos + match_length] and
-                   match_length < 15):
+                   match_length < 15 and
+                   data[j + match_length] == data[current_pos + match_length]):
                 match_length += 1
             
             # Update best match
@@ -52,9 +53,7 @@ def compress(data):
         
         # Encode token
         if best_length > 2:
-            # Compressed token: 3 bits for length, 10 bits for offset
-            # Length is (actual_length - 1), so 3 bits can represent 0-7 (+1)
-            # Offset is backwards reference
+            # Compressed token: offset (10 bits) + length (3 bits) - 1
             token = ((best_offset & 0x3FF) << 3) | (best_length - 1)
             output.append((token >> 8) & 0xFF)   # High byte
             output.append(token & 0xFF)          # Low byte
@@ -92,20 +91,21 @@ def decompress(compressed_data):
     current_pos = 0
     
     while current_pos < input_length:
-        # Check for literal bytes or 2-byte token
-        if compressed_data[current_pos] < 32:
-            # Literal byte
-            output.append(compressed_data[current_pos])
+        # Detect token type
+        current_byte = compressed_data[current_pos]
+        
+        # Literal byte for values less than 32
+        if current_byte < 32:
+            output.append(current_byte)
             current_pos += 1
             continue
         
-        # Ensure we have 2 bytes for token
+        # Ensure 2 bytes available for token
         if current_pos + 1 >= input_length:
-            output.append(compressed_data[current_pos])
             break
         
         # Read 2-byte token
-        high_byte = compressed_data[current_pos]
+        high_byte = current_byte
         low_byte = compressed_data[current_pos + 1]
         token = (high_byte << 8) | low_byte
         
@@ -113,9 +113,9 @@ def decompress(compressed_data):
         offset = (token >> 3) & 0x3FF
         length = (token & 0x7) + 1
         
-        # Sanity check
-        if offset == 0 or offset > len(output):
-            output.append(compressed_data[current_pos])
+        # Safe copy of repeated sequence
+        if offset > len(output):
+            output.append(current_byte)
             current_pos += 1
             continue
         
