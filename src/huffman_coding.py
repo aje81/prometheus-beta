@@ -47,6 +47,13 @@ def build_huffman_tree(freq_dict):
     heap = [HuffmanNode(char, freq) for char, freq in freq_dict.items()]
     heapq.heapify(heap)
     
+    # If only one character, create a dummy node
+    if len(heap) == 1:
+        node = heap[0]
+        dummy = HuffmanNode(None, node.freq)
+        dummy.left = node
+        return dummy
+    
     # Build tree
     while len(heap) > 1:
         left = heapq.heappop(heap)
@@ -83,7 +90,8 @@ def build_huffman_codes(root):
         
         # Leaf node
         if node.char is not None:
-            codes[node.char] = current_code
+            # Special case for single character (to prevent empty code)
+            codes[node.char] = "0" if current_code == "" else current_code
             return
         
         # Recursive traversal
@@ -110,6 +118,10 @@ def huffman_encode(data):
     """
     if not data:
         raise ValueError("Input data cannot be empty")
+    
+    # Special case for single character
+    if len(set(data)) == 1:
+        return "0" * len(data), build_huffman_tree(build_frequency_dict(data))
     
     # Build frequency dictionary
     freq_dict = build_frequency_dict(data)
@@ -139,8 +151,12 @@ def huffman_decode(encoded_data, tree_root):
     Raises:
         ValueError: If encoded data or tree root is invalid
     """
-    if not encoded_data or not tree_root:
+    if not encoded_data and not (tree_root and tree_root.char is not None):
         raise ValueError("Encoded data and tree root must be provided")
+    
+    # Special case for single character
+    if tree_root.left and tree_root.left.char is not None and tree_root.right is None:
+        return tree_root.left.char * (len(encoded_data))
     
     decoded_data = []
     current_node = tree_root
