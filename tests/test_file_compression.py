@@ -54,14 +54,14 @@ def test_directory_compression():
     with pytest.raises(IsADirectoryError):
         compress_file(tempfile.gettempdir())
 
-def test_file_permissions(sample_file, tmp_path):
+def test_file_permissions(sample_file):
     """Test file compression with permission restrictions."""
-    # Remove read permissions
-    os.chmod(sample_file, 0o000)
-    
     try:
+        # Completely remove all permissions
+        os.chmod(sample_file, 0o000)
+
         with pytest.raises(PermissionError):
             compress_file(sample_file)
     finally:
-        # Restore permissions to avoid cleanup issues
+        # Restore permissions
         os.chmod(sample_file, 0o666)
