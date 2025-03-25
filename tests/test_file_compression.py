@@ -12,7 +12,10 @@ def sample_file():
         temp_file.write("This is a test file for compression.")
         temp_file_path = temp_file.name
     yield temp_file_path
-    os.unlink(temp_file_path)
+    try:
+        os.unlink(temp_file_path)
+    except:
+        pass
 
 def test_compress_file(sample_file):
     """Test basic file compression."""
@@ -51,13 +54,14 @@ def test_directory_compression():
     with pytest.raises(IsADirectoryError):
         compress_file(tempfile.gettempdir())
 
-def test_file_permissions(sample_file):
-    """Simulate a permission error by making the input file read-only."""
-    # Make the file read-only
-    os.chmod(sample_file, 0o444)
+def test_file_permissions(sample_file, tmp_path):
+    """Test file compression with permission restrictions."""
+    # Remove read permissions
+    os.chmod(sample_file, 0o000)
     
-    with pytest.raises(PermissionError):
-        compress_file(sample_file)
-    
-    # Reset permissions
-    os.chmod(sample_file, 0o666)
+    try:
+        with pytest.raises(PermissionError):
+            compress_file(sample_file)
+    finally:
+        # Restore permissions to avoid cleanup issues
+        os.chmod(sample_file, 0o666)
