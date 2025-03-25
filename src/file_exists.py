@@ -1,7 +1,7 @@
 import os
-from typing import Union, Optional, PathLike
+from typing import Union
 
-def check_file_exists(file_path: Union[str, PathLike]) -> bool:
+def check_file_exists(file_path: Union[str, os.PathLike]) -> bool:
     """
     Check if a file exists at the specified path.
 
