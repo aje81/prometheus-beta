@@ -26,49 +26,43 @@ def compress(data):
     if not data:
         raise ValueError("Input cannot be empty")
     
-    # LZJB compression variables
     output = bytearray()
     input_length = len(data)
     current_pos = 0
     
     while current_pos < input_length:
-        # Look-ahead buffer size
-        look_ahead = min(input_length - current_pos, 256)
-        
-        # Try to find the longest match
-        best_length = 1
+        # Look for the longest matching sequence
+        best_length = 0
         best_offset = 0
         
-        # Search back up to 1024 bytes
+        # Search back window (max 1024 bytes)
         search_start = max(0, current_pos - 1024)
+        search_end = current_pos
         
-        for j in range(search_start, current_pos):
+        for j in range(search_start, search_end):
             match_length = 0
             
-            # Check for match length
-            while (match_length < look_ahead and 
-                   j + match_length < current_pos and 
+            # Check match length, stop at 15 or end of input
+            while (current_pos + match_length < input_length and 
+                   match_length < 15 and 
                    data[j + match_length] == data[current_pos + match_length]):
                 match_length += 1
-                
-                # Stop if we've reached max match length
-                if match_length >= 15:
-                    break
             
             # Update best match if found
             if match_length > best_length:
                 best_length = match_length
                 best_offset = current_pos - j
         
-        # Encode the token
+        # Encode token
         if best_length > 2:
-            # Compressed token: offset and length
+            # Compressed token: offset and length 
+            # 3 bits for length, rest for offset
             token = ((best_offset & 0x3FF) << 3) | (best_length - 1)
             output.append((token >> 8) & 0xFF)  # High byte
             output.append(token & 0xFF)         # Low byte
             current_pos += best_length
         else:
-            # Literal token
+            # Literal byte
             output.append(data[current_pos])
             current_pos += 1
     
@@ -100,35 +94,38 @@ def decompress(compressed_data):
     current_pos = 0
     
     while current_pos < input_length:
-        # For single byte data or literals up to 31
-        if current_pos >= input_length or compressed_data[current_pos] < 32:
-            if current_pos >= input_length:
-                break
+        # Check if it's a literal byte (first byte < 32)
+        if compressed_data[current_pos] < 32:
             output.append(compressed_data[current_pos])
             current_pos += 1
             continue
         
-        # Ensure we have at least 2 bytes
+        # Ensure we have 2 bytes for token processing
         if current_pos + 1 >= input_length:
             raise ValueError("Malformed compressed data")
         
-        # Read token bytes
+        # Read 2-byte token
         high_byte = compressed_data[current_pos]
         low_byte = compressed_data[current_pos + 1]
         token = (high_byte << 8) | low_byte
         
         # Decode offset and length
-        offset = ((token >> 3) & 0x3FF)
+        # Last 3 bits are length, rest are offset
+        offset = (token >> 3) & 0x3FF
         length = (token & 0x7) + 1
         
-        # Validate offset and length
+        # Validate offset
         if offset == 0 or offset > len(output):
-            raise ValueError("Invalid offset in compressed data")
+            # Fallback to literal if invalid offset
+            output.append(compressed_data[current_pos])
+            current_pos += 1
+            continue
         
-        # Copy matched sequence
+        # Copy sequence from previous match
         start = len(output) - offset
-        for i in range(length):
-            output.append(output[start + i])
+        for _ in range(length):
+            output.append(output[start])
+            start += 1
         
         current_pos += 2
     
