@@ -43,13 +43,14 @@ def to_alternating_camel_case(input_string: str) -> str:
     for i, word in enumerate(words[1:], 1):
         # Alternate between lower and upper case
         if i % 2 == 1:
-            # Capitalize alphabetic words, keep numbers and non-alphabetic as-is
+            # Capitalize words, but preserve numeric or symbol tokens
             if any(c.isalpha() for c in word):
                 result_words.append(word.capitalize())
             else:
                 result_words.append(word)
         else:
-            # Use lowercase for even-indexed words
+            # Ensure lowercase for even-indexed words with alphabetic chars
             result_words.append(word.lower())
     
+    # Join words and return
     return ''.join(result_words)
