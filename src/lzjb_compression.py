@@ -32,12 +32,14 @@ def compress(data):
     current_pos = 0
     
     while current_pos < input_length:
-        # Look-ahead buffer (max 255 bytes)
-        look_ahead = min(input_length - current_pos, 255)
+        # Look-ahead buffer size
+        look_ahead = min(input_length - current_pos, 256)
         
         # Try to find the longest match
-        best_length = 0
+        best_length = 1
         best_offset = 0
+        
+        # Search back up to 1024 bytes
         search_start = max(0, current_pos - 1024)
         
         for j in range(search_start, current_pos):
@@ -45,6 +47,7 @@ def compress(data):
             
             # Check for match length
             while (match_length < look_ahead and 
+                   j + match_length < current_pos and 
                    data[j + match_length] == data[current_pos + match_length]):
                 match_length += 1
                 
@@ -97,33 +100,36 @@ def decompress(compressed_data):
     current_pos = 0
     
     while current_pos < input_length:
-        # Check if we have enough bytes for processing
+        # For single byte data or literals up to 31
+        if current_pos >= input_length or compressed_data[current_pos] < 32:
+            if current_pos >= input_length:
+                break
+            output.append(compressed_data[current_pos])
+            current_pos += 1
+            continue
+        
+        # Ensure we have at least 2 bytes
         if current_pos + 1 >= input_length:
             raise ValueError("Malformed compressed data")
         
-        # Read token
+        # Read token bytes
         high_byte = compressed_data[current_pos]
         low_byte = compressed_data[current_pos + 1]
         token = (high_byte << 8) | low_byte
         
-        # Check if it's a literal or compressed token
-        if high_byte < 32:  # Literal
-            output.append(high_byte)
-            current_pos += 1
-        else:
-            # Decode offset and length
-            offset = ((token >> 3) & 0x3FF)
-            length = (token & 0x7) + 1
-            
-            # Validate offset and length
-            if offset > len(output):
-                raise ValueError("Invalid offset in compressed data")
-            
-            # Copy matched sequence
-            start = len(output) - offset
-            for i in range(length):
-                output.append(output[start + i])
-            
-            current_pos += 2
+        # Decode offset and length
+        offset = ((token >> 3) & 0x3FF)
+        length = (token & 0x7) + 1
+        
+        # Validate offset and length
+        if offset == 0 or offset > len(output):
+            raise ValueError("Invalid offset in compressed data")
+        
+        # Copy matched sequence
+        start = len(output) - offset
+        for i in range(length):
+            output.append(output[start + i])
+        
+        current_pos += 2
     
     return bytes(output)
