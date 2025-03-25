@@ -26,12 +26,8 @@ def compress_file(input_path, output_path=None):
     if os.path.isdir(input_path):
         raise IsADirectoryError(f"Input path must be a file, not a directory: {input_path}")
 
-    # Explicit read and write permission checks
-    try:
-        # Attempt to open the file to verify read permissions
-        with open(input_path, 'rb'):
-            pass
-    except PermissionError:
+    # Validate file permissions
+    if not os.access(input_path, os.R_OK):
         raise PermissionError(f"No read permission for file: {input_path}")
 
     # If no output path is specified, create one by appending .gz
@@ -48,7 +44,7 @@ def compress_file(input_path, output_path=None):
         with open(input_path, 'rb') as f_in:
             with gzip.open(output_path, 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
-    except PermissionError:
+    except (PermissionError, IOError):
         raise PermissionError(f"Insufficient permissions to read {input_path} or write {output_path}")
 
     return output_path
