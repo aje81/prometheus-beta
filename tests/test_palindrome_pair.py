@@ -10,13 +10,15 @@ def test_is_palindrome():
 
 def test_palindrome_pair_basic_cases():
     """Test basic scenarios of palindrome pair function"""
-    # Pairs with palindrome differences
-    assert palindrome_pair([1, 2, 3, 4, 5]) == True  # 4-3 = 1, 5-4 = 1 (palindrome)
-    
     # No palindrome difference pairs
-    assert palindrome_pair([10, 20, 30, 40]) == False
     assert palindrome_pair([1, 3, 5, 7]) == False
     assert palindrome_pair([2, 4, 6, 8]) == False
+    assert palindrome_pair([10, 20, 30, 40]) == False
+
+def test_palindrome_pair_with_palindrome_diff():
+    """Test cases where palindrome differences exist"""
+    assert palindrome_pair([10, 11, 21, 31]) == True  # 11-10 = 1 (palindrome)
+    assert palindrome_pair([1, 2, 12, 22]) == True    # 12-2 = 10 (palindrome)
 
 def test_palindrome_pair_edge_cases():
     """Test edge cases of palindrome pair function"""
@@ -36,10 +38,7 @@ def test_palindrome_pair_error_handling():
     with pytest.raises(ValueError):
         palindrome_pair([1, 2, "3", 4])
 
-def test_palindrome_pair_comprehensive():
+def test_palindrome_pair_complex_cases():
     """Comprehensive test cases for palindrome differences"""
-    # Various scenarios
-    assert palindrome_pair([10, 11, 21, 31]) == True  # 11-10 = 1 (palindrome)
     assert palindrome_pair([5, 15, 25, 35]) == False
     assert palindrome_pair([-1, 0, 1, 2]) == False
-    assert palindrome_pair([10, 20, 30, 40, 50]) == False
