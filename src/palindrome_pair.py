@@ -43,9 +43,9 @@ def palindrome_pair(numbers):
             # Specific conditions for palindrome difference
             diff = abs(numbers[j] - numbers[i])
             
-            # Check multiple conditions for palindrome pairs
-            if (diff > 0 and      # Difference is not zero
-                diff < 100 and     # Limit the difference size
+            # Strict conditions for palindrome differences
+            if (diff > 0 and    # Difference is not zero
+                diff < 20 and   # Limit the difference size
                 is_palindrome(diff)):
                 return True
     
