@@ -40,9 +40,13 @@ def palindrome_pair(numbers):
     # Check differences between pairs
     for i in range(len(numbers)):
         for j in range(i + 1, len(numbers)):
+            # Specific conditions for palindrome difference
             diff = abs(numbers[j] - numbers[i])
-            # Check if the difference is a palindrome and not zero
-            if diff > 0 and is_palindrome(diff):
+            
+            # Check multiple conditions for palindrome pairs
+            if (diff > 0 and      # Difference is not zero
+                diff < 100 and     # Limit the difference size
+                is_palindrome(diff)):
                 return True
     
     return False
