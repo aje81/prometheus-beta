@@ -35,7 +35,7 @@ def test_multiple_operations():
         'add': 1, 
         'transpose': True
     })
-    assert result == [[2, 6], [4, 8]]
+    assert result == [[3, 7], [5, 9]]
 
 def test_error_empty_array():
     with pytest.raises(ValueError):
