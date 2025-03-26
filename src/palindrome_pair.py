@@ -41,7 +41,7 @@ def palindrome_pair(numbers):
     for i in range(len(numbers)):
         for j in range(i + 1, len(numbers)):
             diff = abs(numbers[j] - numbers[i])
-            if is_palindrome(diff):
+            if diff > 0 and is_palindrome(diff):
                 return True
     
     return False
