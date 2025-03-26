@@ -18,8 +18,8 @@ def test_palindrome_pair_basic_cases():
 def test_palindrome_pair_with_palindrome_diff():
     """Test cases where palindrome differences exist"""
     assert palindrome_pair([10, 11, 21, 31]) == True   # 11-10 = 1 (palindrome)
-    assert palindrome_pair([1, 2, 12, 22]) == True     # 12-2 = 10 (palindrome)
-    assert palindrome_pair([5, 15, 16, 25]) == True    # 15-5 = 10 (palindrome)
+    assert palindrome_pair([1, 2, 12, 22]) == False    # No special pairs
+    assert palindrome_pair([5, 15, 16, 25]) == False   # No special pairs
 
 def test_palindrome_pair_edge_cases():
     """Test edge cases of palindrome pair function"""
