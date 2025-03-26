@@ -37,8 +37,8 @@ def palindrome_pair(numbers):
     if not all(isinstance(x, int) for x in numbers):
         raise ValueError("List must contain only integers")
     
-    # Check differences between adjacent pairs
-    for i in range(len(numbers) - 1):
+    # Check differences between pairs
+    for i in range(len(numbers)):
         for j in range(i + 1, len(numbers)):
             diff = abs(numbers[j] - numbers[i])
             if is_palindrome(diff):
