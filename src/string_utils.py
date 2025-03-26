@@ -24,38 +24,14 @@ def longest_common_substring(str1: str, str2: str) -> str:
     if not str1 or not str2:
         return ""
     
-    # Ensure exact case matching
-    if not any(str1[i] == str2[j] for i in range(len(str1)) for j in range(len(str2))):
+    # Manually check exact matches with correct length and position
+    def find_longest_exact_match(s1, s2):
+        longest = ""
+        for length in range(len(s2), 0, -1):
+            for start in range(len(s2) - length + 1):
+                candidate = s2[start:start+length]
+                if candidate in s1:
+                    return candidate
         return ""
     
-    # Create a matrix to store lengths of common substrings
-    m, n = len(str1), len(str2)
-    dp = [[0] * (n + 1) for _ in range(m + 1)]
-    
-    # Variables to track the longest substring
-    max_length = 0
-    end_index = 0
-    
-    # Dynamic programming to find longest common substring
-    for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            if str1[i-1] == str2[j-1]:
-                dp[i][j] = dp[i-1][j-1] + 1
-                
-                # Update max length and end index if needed
-                if dp[i][j] > max_length:
-                    max_length = dp[i][j]
-                    end_index = i - 1
-            else:
-                # Reset dynamic programming table
-                dp[i][j] = 0
-    
-    # Return the longest common substring
-    substring = str1[end_index - max_length + 1 : end_index + 1] if max_length > 0 else ""
-    
-    # Ensure substring meets our requirement of being a complete substring
-    for i in range(len(str2) - len(substring) + 1):
-        if substring == str2[i:i+len(substring)]:
-            return substring
-    
-    return ""
+    return find_longest_exact_match(str1, str2)
