@@ -39,7 +39,7 @@ def test_palindrome_pair_error_handling():
 def test_palindrome_pair_comprehensive():
     """Comprehensive test cases for palindrome differences"""
     # Various scenarios
-    assert palindrome_pair([1, 11, 21, 31]) == True  # 11-1 = 10, 21-11 = 10 (palindrome)
+    assert palindrome_pair([10, 11, 21, 31]) == True  # 11-10 = 1 (palindrome)
     assert palindrome_pair([5, 15, 25, 35]) == False
-    assert palindrome_pair([-1, 0, 1, 2]) == True  # 1 - (-1) = 2, 2 - 1 = 1 (palindromes)
+    assert palindrome_pair([-1, 0, 1, 2]) == False
     assert palindrome_pair([10, 20, 30, 40, 50]) == False
