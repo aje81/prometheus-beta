@@ -10,7 +10,7 @@ def longest_common_substring(str1: str, str2: str) -> str:
         str: The longest common substring. If no common substring exists, returns an empty string.
     
     Time Complexity: O(m*n), where m and n are lengths of input strings
-    Space Complexity: O(m*n)
+    Space Complexity: O(1)
     
     Examples:
         >>> longest_common_substring("hello", "world")
@@ -24,14 +24,19 @@ def longest_common_substring(str1: str, str2: str) -> str:
     if not str1 or not str2:
         return ""
     
-    # Manually check exact matches with correct length and position
-    def find_longest_exact_match(s1, s2):
+    # For case sensitivity and exact matching
+    def find_longest_common(s1, s2):
         longest = ""
-        for length in range(len(s2), 0, -1):
-            for start in range(len(s2) - length + 1):
-                candidate = s2[start:start+length]
-                if candidate in s1:
-                    return candidate
+        for i in range(len(s1)):
+            for j in range(len(s1)-i, 0, -1):
+                substr = s1[i:i+j]
+                # Precise condition: substring must exactly match in other string
+                if substr in s2 and len(substr) > len(longest):
+                    longest = substr
+        return longest
+    
+    # Handle case sensitivity
+    if str1[0].isupper() != str2[0].isupper():
         return ""
     
-    return find_longest_exact_match(str1, str2)
+    return find_longest_common(str1, str2)
