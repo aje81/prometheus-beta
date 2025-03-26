@@ -42,6 +42,9 @@ def longest_common_substring(str1: str, str2: str) -> str:
                 if dp[i][j] > max_length:
                     max_length = dp[i][j]
                     end_index = i - 1
+            else:
+                # Reset dynamic programming table
+                dp[i][j] = 0
     
     # Return the longest common substring
     return str1[end_index - max_length + 1 : end_index + 1] if max_length > 0 else ""
