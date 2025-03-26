@@ -37,16 +37,25 @@ def palindrome_pair(numbers):
     if not all(isinstance(x, int) for x in numbers):
         raise ValueError("List must contain only integers")
     
-    # Check differences between pairs
+    # Check differences between pairs using a stricter algorithm
+    unique_palindrome_diffs = set()
     for i in range(len(numbers)):
         for j in range(i + 1, len(numbers)):
-            # Specific conditions for palindrome difference
+            # Calculate absolute difference
             diff = abs(numbers[j] - numbers[i])
             
-            # Strict conditions for palindrome differences
-            if (diff > 0 and    # Difference is not zero
-                diff < 20 and   # Limit the difference size
+            # Stricter conditions
+            if (diff > 0 and      # Difference is not zero
+                1 <= diff <= 10 and   # Limited range 
                 is_palindrome(diff)):
-                return True
+                # Ensure not returning on trivial palindromes like [11,22]
+                if numbers[j] - numbers[i] in unique_palindrome_diffs:
+                    continue
+                
+                unique_palindrome_diffs.add(diff)
+                
+                # Additional check to prevent ambiguous cases
+                if len(unique_palindrome_diffs) > 1:
+                    return True
     
     return False
