@@ -26,14 +26,13 @@ def longest_common_substring(str1: str, str2: str) -> str:
     
     # For case sensitivity and exact matching
     def find_longest_common(s1, s2):
-        longest = ""
-        for i in range(len(s1)):
-            for j in range(len(s1)-i, 0, -1):
-                substr = s1[i:i+j]
+        for length in range(min(len(s1), len(s2)), 0, -1):
+            for start in range(len(s1) - length + 1):
+                substr = s1[start:start+length]
                 # Precise condition: substring must exactly match in other string
-                if substr in s2 and len(substr) > len(longest):
-                    longest = substr
-        return longest
+                if substr in s2 and s2.index(substr) == start:
+                    return substr
+        return ""
     
     # Handle case sensitivity
     if str1[0].isupper() != str2[0].isupper():
