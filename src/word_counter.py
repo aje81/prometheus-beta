@@ -22,11 +22,11 @@ def count_unique_words(text: str) -> int:
     if not text:
         return 0
     
-    # Convert to lowercase and remove punctuation
-    cleaned_text = re.sub(r'[^\w\s]', '', text.lower())
+    # Convert to lowercase and replace hyphens and other punctuation with spaces
+    cleaned_text = re.sub(r'[^\w\s]', ' ', text.lower())
     
-    # Split into words and remove extra whitespace
-    words = cleaned_text.split()
+    # Split into words, remove extra whitespace, and filter out empty strings
+    words = [word for word in cleaned_text.split() if word]
     
     # Return count of unique words
     return len(set(words))
